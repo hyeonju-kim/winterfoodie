@@ -1,31 +1,57 @@
 package com.winterfoodies.ceo.domain.user.controller;
 
-import com.winterfoodies.ceo.domain.user.UserService;
-import com.winterfoodies.ceo.domain.user.repository.UserRepository;
+import com.winterfoodies.ceo.config.properties.UiControlProperties;
+import com.winterfoodies.ceo.domain.user.service.UserService;
+import com.winterfoodies.ceo.domain.user.service.security.UserDetailsImpl;
 import com.winterfoodies.ceo.dto.user.UserRequestDto;
 import com.winterfoodies.ceo.dto.user.UserResponseDto;
+import com.winterfoodies.ceo.entities.User;
+import com.winterfoodies.ceo.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/view/user")
 @RequiredArgsConstructor
 @Controller
 public class UserController {
 
+    private final AuthenticationManager authenticationManager;
     private final UserService userService;
+
+    private final UiControlProperties uiControlProperties;
 
     @GetMapping("/login")
     public String login(){
         return "login";
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<UserResponseDto> createLogin(@RequestBody UserRequestDto userRequestDto){
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(userRequestDto.getEmail(), userRequestDto.getPassword()));
 
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
+
+        UserResponseDto responseDto = principal.getUserResponseDto();
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<UserResponseDto> logout(@CookieValue("SESSION") String sessionValue){
+        System.out.println("sessionValue : " + sessionValue);
+        SecurityContextHolder.clearContext();
+        return ResponseEntity.ok(UserResponseDto.of(HttpStatus.OK, uiControlProperties.getRedirectLogin()));
+    }
 
     @GetMapping("/register")
     public String register(){
@@ -34,15 +60,22 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> createRegister(@RequestBody UserRequestDto userRequestDto){
-
         UserResponseDto responseDto = userService.register(userRequestDto);
-
-        if(!HttpStatus.OK.equals(responseDto.getStatus())){
-            return ResponseEntity.status(responseDto.getStatus())
-                    .body(responseDto);
-        }
         return ResponseEntity.ok(responseDto);
-
     }
+
+    @GetMapping("/forgot-password")
+    public String forgotPassword(){
+        return "forgot-password";
+    }
+
+
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<UserResponseDto> userExceptionHandler(UserException userException){
+        UserResponseDto userResponseDto =
+                UserResponseDto.builder().message(userException.getMessage()).build();
+        return ResponseEntity.status(userException.getStatus()).body(userResponseDto);
+    }
+
 
 }

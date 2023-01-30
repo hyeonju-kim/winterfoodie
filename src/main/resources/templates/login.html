@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>SB Admin 2 - Login</title>
+    <title>윈터푸디스 - 로그인</title>
     <!-- Custom fonts for this template-->
     <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
     <link
@@ -15,6 +15,7 @@
         rel="stylesheet">
     <!-- Custom styles for this template-->
     <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
+    <script th:src="@{/js/common.js}"></script>
 </head>
 
 <body class="bg-gradient-primary">
@@ -34,17 +35,17 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">CEO 로그인</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">윈터푸디스 CEO 로그인</h1>
                                     </div>
                                     <form class="user">
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Email">
+                                                id="email" aria-describedby="emailHelp"
+                                                placeholder="이메일">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password">
+                                                id="password" placeholder="비밀번호">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -52,14 +53,14 @@
                                                 <label class="custom-control-label" for="customCheck">메일 저장</label>
                                             </div>
                                         </div>
-                                        <a href="index.html" class="btn btn-primary btn-user btn-block">
+                                        <a id ="confirmBtn" class="btn btn-primary btn-user btn-block">
                                             로그인
                                         </a>
                                         <hr>
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="small" href="forgot-password.html">비밀번호를 잊으셨나요?</a>
+                                        <a class="small" th:href="@{/view/user/forgot-password}">비밀번호를 잊으셨나요?</a>
                                     </div>
                                     <div class="text-center">
                                         <a class="small" th:href="@{/view/user/register}">회원가입</a>
@@ -85,6 +86,7 @@
 
     <!-- Custom scripts for all pages-->
     <script th:src="@{/js/sb-admin-2.min.js}"></script>
+    <script th:src="@{/js/login.js}"></script>
 
 </body>
 

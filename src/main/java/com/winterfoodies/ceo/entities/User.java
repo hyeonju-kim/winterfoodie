@@ -1,11 +1,15 @@
 package com.winterfoodies.ceo.entities;
 
+import com.winterfoodies.ceo.dto.user.UserRequestDto;
 import com.winterfoodies.ceo.entities.enums.status.UserStatus;
 import com.winterfoodies.ceo.entities.enums.user.UserType;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "USERS", indexes = {
@@ -14,7 +18,9 @@ import javax.persistence.*;
 @Getter
 @Setter
 @SequenceGenerator(name = "userSeq", sequenceName = "USER_SEQ", initialValue = 1, allocationSize = 1)
-public class User {
+@NoArgsConstructor
+public class User implements Serializable {
+    
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSeq")
     @Column(name = "USER_ID")
     private Long id;
@@ -40,4 +46,16 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private Store store;
+
+    public User(UserRequestDto userRequestDto, UserType type){
+        this.name = userRequestDto.getName();
+        this.email = userRequestDto.getEmail();
+        this.phoneNumber = userRequestDto.getPhoneNumber();
+        this.role = type;
+        this.password = userRequestDto.getPassword();
+    }
+
+    public void encryptPassword(PasswordEncoder passwordEncoder){
+        this.password = passwordEncoder.encode(this.password);
+    }
 }
