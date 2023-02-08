@@ -10,6 +10,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @RequiredArgsConstructor
 @Getter
 public class UiControlProperties {
+
     private final String redirectDashboard;
     private final String redirectLogin;
     private final String redirectRegister;

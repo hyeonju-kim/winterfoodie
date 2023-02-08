@@ -1,13 +1,15 @@
 package com.winterfoodies.ceo.entities;
 
 
+import com.winterfoodies.ceo.dto.store.StoreRequestDto;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.sql.Blob;
 import java.time.LocalDateTime;
-
+import java.util.Objects;
 
 @Entity
 @Table(name = "STORE_DETAIL")
@@ -19,18 +21,7 @@ public class StoreDetail {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "storeDetailSeq")
     @Column(name = "STORE_DETAIL_ID")
     private Long id;
-    /**
-     * varchar STORE_NAME "가게이름"
-     * 			varchar STORE_ADRESS_NO "가게주소번호"
-     * 			varchar STORE_BASIC_ADDRESS "가게기본주소"
-     * 			varchar STORE_DETAIL_ADDRESS "가게세부주소"
-     * 			varchar STORE_ROAD_CODE "가게도로명주소코드"
-     * 		  varchar STORE_OFFICIAL_CODE "가게행정부주소코드"
-     * 			varchar STORE_OPEN_TIME "가게 오픈 시간"
-     * 			varchar STORE_CLSE_TIME "가게 종료 시간"
-     * 			blob STORE_INTRO "가게간단소개"
-     * 			varchar STORE_THUMBNAIL_IMG "가게썸네일이미지"
-     */
+
     @Column(name = "STORE_NAME")
     private String name;
 
@@ -64,4 +55,18 @@ public class StoreDetail {
 
     @OneToOne(mappedBy = "storeDetail")
     private Store store;
+
+    public void fillValue(StoreRequestDto storeRequestDto){
+        this.name = StringUtils.hasText(storeRequestDto.getName()) ? storeRequestDto.getName() : name;
+        this.addressNo = StringUtils.hasText(storeRequestDto.getAddressNo()) ? storeRequestDto.getAddressNo() : addressNo;
+        this.info = StringUtils.hasText(storeRequestDto.getInfo()) ? storeRequestDto.getInfo() : info;
+        this.basicAddress =  StringUtils.hasText(storeRequestDto.getBasicAddress()) ?  storeRequestDto.getBasicAddress() : basicAddress;
+        this.detailAddress =  StringUtils.hasText(storeRequestDto.getDetailAddress()) ? storeRequestDto.getDetailAddress() : detailAddress;
+        this.officialCodeNo =  StringUtils.hasText(storeRequestDto.getOfficialCodeNo()) ? storeRequestDto.getOfficialCodeNo() : officialCodeNo;
+        this.roadCodeNo =  StringUtils.hasText(storeRequestDto.getRoadCodeNo()) ? storeRequestDto.getRoadCodeNo() : roadCodeNo;
+        this.openTime =  !Objects.isNull(storeRequestDto.getOpenTime()) ? storeRequestDto.getOpenTime()  : openTime;
+        this.closeTime =  !Objects.isNull(storeRequestDto.getCloseTime()) ? storeRequestDto.getCloseTime() : closeTime;
+        this.thumbnailImgUrl =  StringUtils.hasText(storeRequestDto.getThumbnailImgUrl()) ? storeRequestDto.getThumbnailImgUrl() : thumbnailImgUrl;
+    }
+
 }

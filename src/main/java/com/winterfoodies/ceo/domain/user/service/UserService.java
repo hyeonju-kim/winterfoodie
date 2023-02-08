@@ -46,7 +46,7 @@ public class UserService {
         String email = userRequestDto.getEmail();
         String pw = userRequestDto.getPassword();
         User retrievedUser = userRepository.findByEmail(email).orElseThrow(()->{
-            return new UserException("해당 이메일이 존재하지 않습니다.", HttpStatus.BAD_REQUEST, null);
+            return new UserException("가입되지 않은 이메일입니다.", HttpStatus.BAD_REQUEST, null);
         });
         //조회한 비밀번호
         String foundPw = retrievedUser.getPassword();
@@ -59,6 +59,13 @@ public class UserService {
         return UserResponseDto.of(retrievedUser, HttpStatus.OK, uiControlProperties.getRedirectDashboard());
     }
 
-
+    @Transactional(readOnly = true)
+    public boolean isExistEmail(UserRequestDto userRequestDto){
+        String email = userRequestDto.getEmail();
+        User foundUser = userRepository.findByEmail(email).orElseThrow(
+                ()->new UserException("가입되지 않은 이메일입니다.", HttpStatus.BAD_REQUEST, null)
+        );
+        return true;
+    }
 
 }

@@ -58,14 +58,12 @@
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="register.html">Register</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+                        <h6 class="collapse-header">환경 설정</h6>
+                        <a class="collapse-item" th:href="@{/view/store/reset}">가게정보 수정</a>
                         <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Other Pages:</h6>
-                        <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item" href="blank.html">Blank Page</a>
+                        <h6 class="collapse-header">오늘의 가게 설정</h6>
+                        <button class="rounded-circle border-0 collapse-item -align-center">운영중</button>
+                        <a class="collapse-item" href="blank.html"></a>
                     </div>
                 </div>
             </li>
@@ -141,50 +139,28 @@
                         </li>
 
                         <!-- Nav Item - Alerts -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                        <li class="nav-item dropdown no-arrow mx-1 alert-family">
+                            <a  class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
                                 <!-- Counter - Alerts -->
                                 <span class="badge badge-danger badge-counter">3+</span>
                             </a>
                             <!-- Dropdown - Alerts -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in alert-family"
                                 aria-labelledby="alertsDropdown">
                                 <h6 class="dropdown-header">
                                     Alerts Center
                                 </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                <a th:href="@{/view/store/register}" id="mainMessage" class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="mr-3">
                                         <div class="icon-circle bg-primary">
                                             <i class="fas fa-file-alt text-white"></i>
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="small text-gray-500">December 12, 2019</div>
-                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-success">
-                                            <i class="fas fa-donate text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 7, 2019</div>
-                                        $290.29 has been deposited into your account!
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-warning">
-                                            <i class="fas fa-exclamation-triangle text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 2, 2019</div>
-                                        Spending Alert: We've noticed unusually high spending for your account.
+                                        <div id="alertDayInfo" class="small text-gray-500"></div>
+                                        <span class="font-weight-bold">원활한 사용을 위해<br> 우선적으로 가게 정보를 등록해주세요!</span>
                                     </div>
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
@@ -300,7 +276,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800" id="mainTitle">김현주 CEO님</h1>
+                        <h1 class="h3 mb-0 text-gray-800" id="mainTitle" th:text="${user.getName()} + '님 반가워요'"></h1>
                     </div>
 
                     <!-- Content Row -->
@@ -360,7 +336,6 @@
                             </div>
                         </div>
 
-
                         <!-- Pending Requests Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-warning shadow h-100 py-2">
@@ -369,7 +344,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 누적 주문건수</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">1,812</div>
+                                            <div th:text="${dashboard.getAccumulatedOrderCount()}" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -674,6 +649,7 @@
     <!-- Page level custom scripts -->
     <script th:src="@{/js/demo/chart-area-demo.js}"></script>
     <script th:src="@{/js/demo/chart-pie-demo.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
 
 </body>
 

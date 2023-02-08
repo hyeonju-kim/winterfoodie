@@ -20,10 +20,12 @@ import java.io.Serializable;
 @SequenceGenerator(name = "userSeq", sequenceName = "USER_SEQ", initialValue = 1, allocationSize = 1)
 @NoArgsConstructor
 public class User implements Serializable {
-    
+    static final long serialVersionUID = -3085157956097560247L;
+
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSeq")
     @Column(name = "USER_ID")
     private Long id;
+
 
     @Column(name = "USER_NAME")
     private String name;
@@ -44,7 +46,8 @@ public class User implements Serializable {
     @Column(name = "USER_STATUS")
     private UserStatus status;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne
+    @JoinColumn(name = "STORE_ID")
     private Store store;
 
     public User(UserRequestDto userRequestDto, UserType type){

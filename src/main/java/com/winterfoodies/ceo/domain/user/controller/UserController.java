@@ -1,6 +1,8 @@
 package com.winterfoodies.ceo.domain.user.controller;
 
 import com.winterfoodies.ceo.config.properties.UiControlProperties;
+import com.winterfoodies.ceo.domain.common.EmailService;
+import com.winterfoodies.ceo.domain.common.security.AuthService;
 import com.winterfoodies.ceo.domain.user.service.UserService;
 import com.winterfoodies.ceo.domain.user.service.security.UserDetailsImpl;
 import com.winterfoodies.ceo.dto.user.UserRequestDto;
@@ -8,6 +10,7 @@ import com.winterfoodies.ceo.dto.user.UserResponseDto;
 import com.winterfoodies.ceo.entities.User;
 import com.winterfoodies.ceo.exception.UserException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,11 +24,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/view/user")
 @RequiredArgsConstructor
 @Controller
+@Slf4j
 public class UserController {
 
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
-
+    private final AuthService authService;
     private final UiControlProperties uiControlProperties;
 
     @GetMapping("/login")
@@ -36,7 +40,8 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<UserResponseDto> createLogin(@RequestBody UserRequestDto userRequestDto){
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userRequestDto.getEmail(), userRequestDto.getPassword()));
+                new UsernamePasswordAuthenticationToken(userRequestDto.getEmail(), userRequestDto.getPassword())
+        );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -67,6 +72,15 @@ public class UserController {
     @GetMapping("/forgot-password")
     public String forgotPassword(){
         return "forgot-password";
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<UserResponseDto> sendForgotPasswordEmail(@RequestBody UserRequestDto userRequestDto){
+        boolean isExistMail = userService.isExistEmail(userRequestDto);
+        if(isExistMail){
+            authService.saveTempAuthInfo(userRequestDto.getEmail());
+        }
+        return ResponseEntity.ok(UserResponseDto.empty());
     }
 
 

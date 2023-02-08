@@ -1,5 +1,6 @@
 package com.winterfoodies.ceo.entities;
 
+import com.winterfoodies.ceo.dto.store.StoreRequestDto;
 import com.winterfoodies.ceo.entities.enums.status.StoreStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,11 +23,21 @@ public class Store {
     @Enumerated(EnumType.STRING)
     private StoreStatus status;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @OneToOne(mappedBy = "store")
     private User user;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "STORE_DETAIL_ID")
     private StoreDetail storeDetail;
+
+    public void changeUser(User user){
+        this.user = user;
+    }
+    public void changeStoreDetail(StoreDetail storeDetail){
+        this.storeDetail = storeDetail;
+    }
+
+    public void changeStatus(StoreRequestDto storeRequestDto){
+        this.status = storeRequestDto.getStatus();
+    }
 }

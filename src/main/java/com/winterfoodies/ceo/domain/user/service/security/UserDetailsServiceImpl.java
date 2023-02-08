@@ -22,10 +22,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
+
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(()->{
                     return new UserException("존재하지 않는 이메일입니다.", HttpStatus.BAD_REQUEST, null);
                 });
+
+
         return new UserDetailsImpl(user, uiControlProperties.getRedirectDashboard());
     }
 }
