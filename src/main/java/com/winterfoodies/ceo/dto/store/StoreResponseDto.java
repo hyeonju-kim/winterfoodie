@@ -1,6 +1,7 @@
 package com.winterfoodies.ceo.dto.store;
 
 
+import com.winterfoodies.ceo.entities.Store;
 import com.winterfoodies.ceo.entities.StoreDetail;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,8 @@ public class StoreResponseDto {
 
     private LocalDateTime closeTime;
 
+    private String hasStoreYn;
+
     public void fllWithStoreDetail(StoreDetail storeDetail){
         this.name = storeDetail.getName();
         this.addressNo = storeDetail.getAddressNo();
@@ -38,5 +41,11 @@ public class StoreResponseDto {
         this.closeTime = storeDetail.getCloseTime();
         this.roadCodeNo = storeDetail.getRoadCodeNo();
         this.officialCodeNo =storeDetail.getOfficialCodeNo();
+    }
+
+    public static StoreResponseDto empty(){
+        StoreResponseDto store = new StoreResponseDto();
+        store.setHasStoreYn("N");
+        return store;
     }
 }

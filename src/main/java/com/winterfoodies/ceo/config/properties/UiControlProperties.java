@@ -14,4 +14,5 @@ public class UiControlProperties {
     private final String redirectDashboard;
     private final String redirectLogin;
     private final String redirectRegister;
+    private final String RedirectStoreRegister;
 }

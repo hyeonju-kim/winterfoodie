@@ -41,5 +41,8 @@ public class WebConfig implements WebMvcConfigurer {
         ResourceHandlerRegistration regImg = registry.addResourceHandler("img/**");
         regImg.addResourceLocations("classpath:/img/");
 
+        ResourceHandlerRegistration regStoreImg = registry.addResourceHandler("store-img/**");
+        regStoreImg.addResourceLocations("file:/Users/hyunsoo/tmp/");
+
     }
 }

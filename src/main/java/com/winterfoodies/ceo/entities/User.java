@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "USERS", indexes = {
@@ -25,7 +27,6 @@ public class User implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSeq")
     @Column(name = "USER_ID")
     private Long id;
-
 
     @Column(name = "USER_NAME")
     private String name;
@@ -49,6 +50,9 @@ public class User implements Serializable {
     @OneToOne
     @JoinColumn(name = "STORE_ID")
     private Store store;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Order> order = new ArrayList<>();
 
     public User(UserRequestDto userRequestDto, UserType type){
         this.name = userRequestDto.getName();

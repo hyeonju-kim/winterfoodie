@@ -13,6 +13,7 @@ import com.winterfoodies.ceo.exception.StoreException;
 import com.winterfoodies.ceo.exception.UserException;
 import io.netty.util.internal.ObjectUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -27,6 +28,7 @@ import org.springframework.web.context.annotation.RequestScope;
 import java.util.Objects;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class StoreService {
     private final StoreRepository storeRepository;
@@ -79,4 +81,25 @@ public class StoreService {
         storeResponseDto.fllWithStoreDetail(store.getStoreDetail());
         return storeResponseDto;
     }
+
+    @Transactional(readOnly = true)
+    public StoreResponseDto retrieveStoreWithoutException(User requestUser){
+        long userId = requestUser.getId();
+        User retrievedUser = new User();
+        try {
+            retrievedUser = userRepository.findById(userId).orElseThrow(() -> new UserException("올바르지 않은 접근입니다.", HttpStatus.BAD_REQUEST, null));
+        }catch (Exception e){
+            log.debug("올바르지 않은 접근임");
+            return StoreResponseDto.empty();
+        }
+        Store store = retrievedUser.getStore();
+        if(Objects.isNull(store)){
+           return StoreResponseDto.empty();
+        }
+        StoreResponseDto storeResponseDto = new StoreResponseDto();
+        storeResponseDto.fllWithStoreDetail(store.getStoreDetail());
+        return storeResponseDto;
+    }
+
+
 }

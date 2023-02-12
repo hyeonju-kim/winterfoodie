@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -13,8 +16,9 @@ import javax.persistence.*;
 @Getter
 @Setter
 @SequenceGenerator(name = "storeSeq", sequenceName = "STORE_SEQ", initialValue = 1, allocationSize = 1)
-public class Store {
+public class Store implements Serializable {
 
+    static final long serialVersionUID = -3085157956097560248L;
     @Column(name = "STORE_ID")
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "storeSeq")
     private Long id;
@@ -29,6 +33,12 @@ public class Store {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "STORE_DETAIL_ID")
     private StoreDetail storeDetail;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
+    private List<Order> orders = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
+    private List<StoreProduct> storeProducts = new ArrayList<>();
 
     public void changeUser(User user){
         this.user = user;

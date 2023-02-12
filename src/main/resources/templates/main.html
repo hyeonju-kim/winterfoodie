@@ -59,7 +59,8 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">환경 설정</h6>
-                        <a class="collapse-item" th:href="@{/view/store/reset}">가게정보 수정</a>
+                        <a th:if="${'N' == (store.getHasStoreYn())}" class="collapse-item" th:href="@{/view/store/register}">가게정보 등록</a>
+                        <a th:unless="${'N' == (store.getHasStoreYn())}" class="collapse-item" th:href="@{/view/store/reset}">가게정보 수정</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">오늘의 가게 설정</h6>
                         <button class="rounded-circle border-0 collapse-item -align-center">운영중</button>
@@ -144,7 +145,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
                                 <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">3+</span>
+                                <span th:text="${dashBoard.getAlertMessages().size()}" class="badge badge-danger badge-counter"></span>
                             </a>
                             <!-- Dropdown - Alerts -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in alert-family"
@@ -152,17 +153,19 @@
                                 <h6 class="dropdown-header">
                                     Alerts Center
                                 </h6>
-                                <a th:href="@{/view/store/register}" id="mainMessage" class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
+                                <th:block th:if="${dashBoard.getAlertMessages().size() > 0}" th:each="message : ${dashBoard.getAlertMessages()}">
+                                    <a th:href="${message.getLink()}" id="mainMessage" class="dropdown-item d-flex align-items-center" href="#">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-primary">
+                                                <i class="fas fa-file-alt text-white"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <div id="alertDayInfo" class="small text-gray-500"></div>
-                                        <span class="font-weight-bold">원활한 사용을 위해<br> 우선적으로 가게 정보를 등록해주세요!</span>
-                                    </div>
-                                </a>
+                                        <div>
+                                            <div th:text="${message.getDate()}" id="alertDayInfo" class="small text-gray-500"></div>
+                                            <span th:utext="${message.getContents()}" class="font-weight-bold"></span>
+                                        </div>
+                                    </a>
+                                </th:block>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
                             </div>
                         </li>
@@ -281,16 +284,16 @@
 
                     <!-- Content Row -->
                     <div class="row">
-
+                        <th:block th:each="card : ${dashBoard.getTopInfoCards()}">
                         <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-primary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                이달의 매출(1월)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">40,000원</div>
+                                            <div th:text="${card.getTitle()}" class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                 </div>
+                                            <div th:text="${card.getContent()}" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -299,60 +302,7 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                올해 누적 매출(~2022.01.02)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">170,000원</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                어제의 매출(2022.01.02)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">12,000원</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pending Requests Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-warning shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                누적 주문건수</div>
-                                            <div th:text="${dashboard.getAccumulatedOrderCount()}" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-comments fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </th:block>
                     </div>
 
                     <!-- Content Row -->
@@ -365,7 +315,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">월별 매출 그래프</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -396,36 +346,22 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
+                                    <h6 class="m-0 font-weight-bold text-primary">매출 구성</h6>
                                 </div>
                                 <!-- Card Body -->
-                                <div class="card-body">
+                               <div class="card-body">
                                     <div class="chart-pie pt-4 pb-2">
                                         <canvas id="myPieChart"></canvas>
                                     </div>
                                     <div class="mt-4 text-center small">
                                         <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> Direct
+                                            <i class="fas fa-circle text-primary"></i> 다꼬야끼
                                         </span>
                                         <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i> Social
+                                            <i class="fas fa-circle text-success"></i> 붕어빵
                                         </span>
                                         <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i> Referral
+                                            <i class="fas fa-circle text-info"></i> 어묵
                                         </span>
                                     </div>
                                 </div>

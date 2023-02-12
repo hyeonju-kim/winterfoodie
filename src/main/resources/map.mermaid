@@ -67,7 +67,7 @@ erDiagram
     ORDERS_PRODUCT{
         bigint ORDERS_PRODUCT_ID PK "주문_상품번호"
         bigint PRODUCT_ID FK "상품번호"
-        bigint ORDER_ID FK "주문번호"
+        bigint ORDERS_ID FK "주문번호"
         bigint QUANTITY "주문수량"
         varchar ARRIVAL_TIME "사용자방문시간"
     }
