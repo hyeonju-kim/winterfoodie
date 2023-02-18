@@ -1,10 +1,10 @@
 var smbCom = {};
-smbCom.createAction = function(url, json, successCB, errorCB, type){
+smbCom.createAction = function(url, json, successCB, errorCB, type, contentType){
     $.ajax({
         type : (type == undefined) ? "POST" : type,
         url : url, //요청 할 URL
         data : JSON.stringify(json), //넘길 파라미터
-        contentType: "application/json; charset=utf-8",
+        contentType: (contentType) ? contentType : "application/json; charset=utf-8",
         success : function(data) {
             successCB(data);
         },

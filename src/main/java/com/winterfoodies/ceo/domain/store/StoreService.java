@@ -1,5 +1,6 @@
 package com.winterfoodies.ceo.domain.store;
 
+import com.winterfoodies.ceo.domain.files.service.FileStorageService;
 import com.winterfoodies.ceo.domain.store.repository.StoreRepository;
 import com.winterfoodies.ceo.domain.user.repository.UserRepository;
 import com.winterfoodies.ceo.domain.user.service.security.UserDetailsImpl;
@@ -9,6 +10,7 @@ import com.winterfoodies.ceo.dto.store.StoreResponseDto;
 import com.winterfoodies.ceo.entities.Store;
 import com.winterfoodies.ceo.entities.StoreDetail;
 import com.winterfoodies.ceo.entities.User;
+import com.winterfoodies.ceo.exception.FileNotSaveException;
 import com.winterfoodies.ceo.exception.StoreException;
 import com.winterfoodies.ceo.exception.UserException;
 import io.netty.util.internal.ObjectUtil;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.annotation.RequestScope;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
 
@@ -32,6 +35,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class StoreService {
     private final StoreRepository storeRepository;
+    private final FileStorageService fileStorageService;
     private final UserRepository userRepository;
 
     @Transactional(rollbackFor = Exception.class)
@@ -43,6 +47,10 @@ public class StoreService {
         StoreDetail storeDetail = new StoreDetail();
         storeDetail.fillValue(storeRequestDto);
 
+        //img처리
+        if(!Objects.isNull(storeRequestDto.getThumbnailImg())) {
+            storeDetail.setThumbnailImgUrl(requestUser.getEmail() + "_img");
+        }
 
         Store store = new Store();
         store.changeStoreDetail(storeDetail);
@@ -50,6 +58,14 @@ public class StoreService {
         retrievedUser.setStore(store);
 
         storeRepository.save(store);
+        if(hasImgFile(storeRequestDto.getThumbnailImg())) {
+            try {
+                fileStorageService.store(storeRequestDto.getThumbnailImg(), requestUser.getEmail() + "_img");
+            } catch (Exception e) {
+                throw new FileNotSaveException("파일 저장 에러");
+            }
+        }
+
         ResponseBox responseBox = new ResponseBox();
         responseBox.redirect("/view/dashboard");
         responseBox.status(HttpStatus.OK);
@@ -63,6 +79,20 @@ public class StoreService {
         Store store = retrievedUser.getStore();
         StoreDetail storeDetail = store.getStoreDetail();
         storeDetail.fillValue(storeRequestDto);
+
+        //img처리
+        if(hasImgFile(storeRequestDto.getThumbnailImg())) {
+            String contentType = storeRequestDto.getThumbnailImg().getContentType().split("/")[1];
+            storeDetail.setThumbnailImgUrl(requestUser.getEmail() + "_img" + "." + contentType);
+        }
+
+        if(hasImgFile(storeRequestDto.getThumbnailImg())){
+            try {
+                fileStorageService.store(storeRequestDto.getThumbnailImg(), storeDetail.getThumbnailImgUrl());
+            } catch (Exception e) {
+                throw new FileNotSaveException("파일 저장 에러");
+            }
+        }
         ResponseBox responseBox = new ResponseBox();
         responseBox.redirect("/view/dashboard");
         responseBox.status(HttpStatus.OK);
@@ -99,6 +129,10 @@ public class StoreService {
         StoreResponseDto storeResponseDto = new StoreResponseDto();
         storeResponseDto.fllWithStoreDetail(store.getStoreDetail());
         return storeResponseDto;
+    }
+
+    private static boolean hasImgFile(MultipartFile file){
+        return !Objects.isNull(file);
     }
 
 

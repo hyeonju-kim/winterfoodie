@@ -30,7 +30,6 @@ public class StoreController {
 
     private final StoreService storeService;
 
-
     @GetMapping("/register")
     public String register(){
         return "store-register";
@@ -38,7 +37,7 @@ public class StoreController {
 
     @ResponseBody
     @PostMapping("")
-    public ResponseEntity<ResponseBox> createRegister(@RequestBody StoreRequestDto storeRequestDto){
+    public ResponseEntity<ResponseBox> createRegister(@ModelAttribute StoreRequestDto storeRequestDto){
         ResponseBox responseBox = storeService.register(storeRequestDto, requestUser);
         return ResponseEntity.status(responseBox.getStatus()).body(responseBox);
     }
@@ -51,7 +50,7 @@ public class StoreController {
     }
 
     @PatchMapping("")
-    public ResponseEntity<ResponseBox> modifyStore(@RequestBody StoreRequestDto storeRequestDto){
+    public ResponseEntity<ResponseBox> modifyStore(@ModelAttribute StoreRequestDto storeRequestDto){
         System.out.println("========PATCH==========");
         System.out.println(storeRequestDto);
         ResponseBox responseBox = storeService.modify(storeRequestDto, requestUser);

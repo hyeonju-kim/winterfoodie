@@ -1,8 +1,11 @@
 package com.winterfoodies.ceo.domain.files.service;
 
 
+import com.winterfoodies.ceo.config.properties.ResourceProperties;
+import com.winterfoodies.ceo.entities.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -21,17 +24,16 @@ import java.nio.file.StandardCopyOption;
 @Slf4j
 public class FileStorageService {
 
-    private final ResourceLoader resourceLoader;
+    private final ResourceProperties resourceProperties;
 
-    public void store(MultipartFile file) throws Exception{
+    public void store(MultipartFile file, String fileName) throws Exception{
         boolean wellStored = true;
         log.info("파일 업로드 시작");
 
-        Path root = Paths.get(resourceLoader.getResource("file:/Users/hyunsoo/tmp").getURI());
+        Path root = Paths.get(resourceProperties.getImgPath());
         System.out.println(root.toString());
 
-        Path destinationFile = root.resolve(Paths.get(file.getOriginalFilename())).normalize().toAbsolutePath();
-
+        Path destinationFile = root.resolve(Paths.get(fileName)).normalize().toAbsolutePath();
 
         System.out.println(destinationFile.getFileName());
         System.out.println(destinationFile);

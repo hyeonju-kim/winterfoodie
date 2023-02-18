@@ -20,7 +20,7 @@ public class FileStorageController {
     @PostMapping ("")
     public String submit(@RequestParam("file") MultipartFile file, Model model){
         try {
-            fileStorageService.store(file);
+            fileStorageService.store(file, "test");
         }catch (Exception e){
             log.error(e.getMessage());
         }

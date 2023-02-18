@@ -5,6 +5,7 @@ import com.winterfoodies.ceo.entities.enums.status.StoreStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Column;
 import javax.persistence.Lob;
@@ -33,6 +34,8 @@ public class StoreRequestDto {
     private String info;
 
     private String thumbnailImgUrl;
+
+    private MultipartFile thumbnailImg;
 
     private StoreStatus status;
 }
