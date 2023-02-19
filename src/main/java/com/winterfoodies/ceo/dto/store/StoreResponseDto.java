@@ -31,6 +31,8 @@ public class StoreResponseDto {
 
     private String hasStoreYn;
 
+    private String thumbNailImgUrl;
+
     public void fllWithStoreDetail(StoreDetail storeDetail){
         this.name = storeDetail.getName();
         this.addressNo = storeDetail.getAddressNo();
@@ -41,6 +43,7 @@ public class StoreResponseDto {
         this.closeTime = storeDetail.getCloseTime();
         this.roadCodeNo = storeDetail.getRoadCodeNo();
         this.officialCodeNo =storeDetail.getOfficialCodeNo();
+        this.thumbNailImgUrl = storeDetail.getThumbnailImgUrl();
     }
 
     public static StoreResponseDto empty(){

@@ -66,7 +66,7 @@
         smbCom.createAction("/view/store", addressInfo, function(data){
             //등록 완료 시
             alert("상호 등록이 완료되었습니다.");
-            window.location.href="http://localhost:8080/view/dashboard";
+            window.location.reload();
         }, function(data){
             //등록 불발 시
             alert(data.message);

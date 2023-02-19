@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,12 @@ public class Order{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "STORE_ID")
     private Store store;
+
+    @Column(name = "PROCESS_YN")
+    private String processYn;
+
+    @Column(name = "CREATED_AT")
+    private LocalDateTime createAt;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     private List<OrderProduct> orderProducts = new ArrayList<>();

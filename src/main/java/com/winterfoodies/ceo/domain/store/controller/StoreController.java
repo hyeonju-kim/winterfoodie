@@ -1,7 +1,9 @@
 package com.winterfoodies.ceo.domain.store.controller;
 
+import com.winterfoodies.ceo.domain.order.OrderService;
 import com.winterfoodies.ceo.domain.store.StoreService;
 import com.winterfoodies.ceo.dto.common.ResponseBox;
+import com.winterfoodies.ceo.dto.order.OrderRequestDto;
 import com.winterfoodies.ceo.dto.store.StoreRequestDto;
 import com.winterfoodies.ceo.dto.store.StoreResponseDto;
 import com.winterfoodies.ceo.dto.user.UserResponseDto;
@@ -18,6 +20,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
+import java.util.Map;
 
 @RequestMapping("/view/store")
 @Controller
@@ -29,6 +33,8 @@ public class StoreController {
     private User requestUser;
 
     private final StoreService storeService;
+
+    private final OrderService orderService;
 
     @GetMapping("/register")
     public String register(){
@@ -69,4 +75,15 @@ public class StoreController {
         responseBox.message(storeException.getMessage());
         return ResponseEntity.status(responseBox.getStatus()).body(responseBox);
     }
+
+    @ResponseBody
+    @PostMapping("/order-process")
+    public Map<String,String> orderProcess(@RequestBody OrderRequestDto orderRequestDto){
+        boolean result = orderService.processOrders(orderRequestDto);
+        if(result){
+            return Collections.singletonMap("result", "Y");
+        }
+        return Collections.singletonMap("result", "N");
+    }
+
 }

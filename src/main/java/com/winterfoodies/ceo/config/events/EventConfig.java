@@ -9,6 +9,7 @@ import java.util.concurrent.Executor;
 
 @Configuration
 public class EventConfig {
+
     @Bean(name = "threadPoolTaskExecutor")
     public Executor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();

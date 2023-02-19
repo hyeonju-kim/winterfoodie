@@ -2,13 +2,6 @@
 (function(jquery){
     let addressInfo = {};
 
-    $("#confirmBtn").on("click", function(){
-        addressInfo.detailAddress = $("#detailAddress").val();
-        addressInfo.name = $("#storeName").val();
-        addressInfo.info = $("#storeInfo").val();
-        fetchRegister();
-    });
-
     $("#addressBtn").on("click",
         function () {
             new daum.Postcode({
@@ -56,6 +49,8 @@
                     // 우편번호와 주소 정보를 해당 필드에 넣는다.
                     document.getElementById('addressNo').value = data.zonecode;
                     document.getElementById("basicAddress").value = addr;
+                    document.getElementById("officialCodeNo").value = data.bcode;
+                    document.getElementById("roadCodeNo").value = data.roadnameCode;
                     // 커서를 상세주소 필드로 이동한다.
                     document.getElementById("detailAddress").focus();
                 }
@@ -63,14 +58,36 @@
         });
 
     function fetchRegister(){
-        smbCom.createAction("/view/store", addressInfo, function(data){
-            //등록 완료 시
-            alert("가게 정보가 수정 되었습니다.");
-            window.location.href="/view/dashboard";
-        }, function(data){
-            //등록 불발 시
-            alert(data.message);
-        }, "PATCH");
-    }
+        var data = new FormData(document.getElementById("resetForm"));
+        console.log("HI~!");
+        try {
+            $.ajax({
+                type: "PATCH",
+                url: "/view/store", //요청 할 URL
+                data: data,
+                enctype: "multipart/form-data",
+                success : function(data) {
+                    alert("수정이 완료되었습니다.");
+                    window.location.reload();
+                },
+                error : function(e) {
+                    alert(e);
+                },
+                contentType : false,
+                processData : false
+            });
+        }catch (e){
+            console.log(e);
+        }
+    };
+
+    $("#confirmBtn").on("click", function(){
+        addressInfo.detailAddress = $("#detailAddress").val();
+        addressInfo.name = $("#storeName").val();
+        addressInfo.info = $("#storeInfo").val();
+        fetchRegister();
+    });
+
+
 })($);
 

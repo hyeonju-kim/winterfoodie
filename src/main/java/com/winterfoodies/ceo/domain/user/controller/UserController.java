@@ -48,6 +48,7 @@ public class UserController {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
 
         UserResponseDto responseDto = principal.getUserResponseDto();
+
         return ResponseEntity.ok(responseDto);
     }
 

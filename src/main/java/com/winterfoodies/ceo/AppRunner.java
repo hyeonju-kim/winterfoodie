@@ -9,6 +9,7 @@ import com.winterfoodies.ceo.entities.enums.user.UserType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,19 +31,26 @@ public class AppRunner implements ApplicationRunner {
     private final OrderRepository orderRepository;
     private final StoreRepository storeRepository;
 
+    private final JdbcTemplate jdbcTemplate;
+
     @Transactional
     @Override
     public void run(ApplicationArguments args) throws Exception {
         testScenario();
     }
 
+
+
     public void testScenario(){
+
+
+
         //사장 - 오주영
         User ceo = new User();
         ceo.setEmail("blessdutch@naver.com");
         ceo.setPassword(passwordEncoder.encode("100825asa!"));
         ceo.setRole(UserType.CEO);
-        ceo.setName("오주영");
+        ceo.setName("김현주");
 
         //가게 생성
         Store store = new Store();
@@ -50,7 +58,7 @@ public class AppRunner implements ApplicationRunner {
 
         //가게 디테일 생성
         StoreDetail storeDetail = new StoreDetail();
-        storeDetail.setName("주영네 붕어빵 가게");
+        storeDetail.setName("현주네 다꼬야끼 가게");
         storeDetail.setBasicAddress("경기도 부천시 소사로 78번길");
         storeDetail.setDetailAddress("두산아파트 101동 1504호");
         storeDetail.setAddressNo("14774");
@@ -69,8 +77,14 @@ public class AppRunner implements ApplicationRunner {
         //상품 생성
         Product product = new Product();
         product.setName("붕어빵");
+        product.setPrice(1500L);
+
+        Product product2 = new Product();
+        product2.setName("델리만쥬");
+        product2.setPrice(3000L);
 
         productRepository.save(product);
+        productRepository.save(product2);
 
         //가게에 상품 생성 후 연결
         StoreProduct storeProduct = new StoreProduct();
@@ -78,20 +92,41 @@ public class AppRunner implements ApplicationRunner {
         storeProduct.setProduct(product);
         storeProductRepository.save(storeProduct);
 
+        StoreProduct storeProduct1 = new StoreProduct();
+        storeProduct1.setStore(store);
+        storeProduct1.setProduct(product2);
+        storeProductRepository.save(storeProduct1);
+
         //사용자 - 장준혁
         User customer = new User();
         customer.setRole(UserType.CUSTOMER);
-        customer.setPassword("1216132");
-        customer.setEmail("ss@kbanknow.com");
-        customer.setName("장준혁");
+        customer.setPassword("33");
+        customer.setEmail("aa@kbanknow.com");
+        customer.setName("류현수");
         userRepository.save(customer);
+
+        User customer2 = new User();
+        customer2.setRole(UserType.CUSTOMER);
+        customer2.setPassword(passwordEncoder.encode("100825asa!"));
+        customer2.setEmail("bb@kbanknow.com");
+        customer2.setName("김소라");
+        userRepository.save(customer2);
 
 
         //주문
         Order order = new Order();
         order.setUser(customer);
         order.setStore(ceo.getStore());
+        order.setCreateAt(LocalDateTime.now());
+        order.setProcessYn("N");
         orderRepository.save(order);
+
+        Order order2 = new Order();
+        order2.setUser(customer2);
+        order2.setStore(ceo.getStore());
+        order2.setCreateAt(LocalDateTime.now());
+        order2.setProcessYn("N");
+        orderRepository.save(order2);
 
         //주문상세
         OrderProduct orderProduct = new OrderProduct();
@@ -101,6 +136,23 @@ public class AppRunner implements ApplicationRunner {
         orderProduct.setQuantity(3L);
         orderProduct.setVisitTime(LocalDateTime.now().plus(Duration.ofHours(1)));
         orderProductRepository.save(orderProduct);
+
+
+        OrderProduct orderProduct2 = new OrderProduct();
+        orderProduct2.setOrder(order);
+        orderProduct2.setProduct(product2);
+        orderProduct2.setClientMessage("덜 익혀주세요");
+        orderProduct2.setQuantity(2L);
+        orderProduct2.setVisitTime(LocalDateTime.now().plus(Duration.ofHours(1)));
+        orderProductRepository.save(orderProduct2);
+
+        OrderProduct orderProduct3 = new OrderProduct();
+        orderProduct3.setOrder(order2);
+        orderProduct3.setProduct(product);
+        orderProduct3.setClientMessage("이집이 최고에요");
+        orderProduct3.setQuantity(10L);
+        orderProduct3.setVisitTime(LocalDateTime.now().plus(Duration.ofHours(1)));
+        orderProductRepository.save(orderProduct3);
 
     }
 }

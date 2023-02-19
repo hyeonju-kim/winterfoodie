@@ -6,7 +6,9 @@ import com.winterfoodies.ceo.dto.dashboard.DashBoard;
 import com.winterfoodies.ceo.dto.dashboard.Message;
 import com.winterfoodies.ceo.dto.dashboard.TopInfoCard;
 import com.winterfoodies.ceo.dto.store.StoreResponseDto;
+import com.winterfoodies.ceo.entities.Sales;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,6 +24,8 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class DashBoardService {
+    private final JdbcTemplate jdbcTemplate;
+
     private final UiControlProperties uiControlProperties;
      public DashBoard retrieveDashBoard(StoreResponseDto storeResponseDto){
          LocalDateTime now = LocalDateTime.now();
@@ -43,17 +47,22 @@ public class DashBoardService {
         return dashBoard;
      }
 
-     private void settingTopCardInfo(DashBoard dashBoard){
+     public void settingTopCardInfo(DashBoard dashBoard){
+         String thisMonthTotal = convertLongToMoneyFormat(getAllSalesByMonth());
+         String thisYearTotal = convertLongToMoneyFormat(getAllSalesByYear());
+         String yesterDayTotal = convertLongToMoneyFormat(getYesterDaySales());
+         String total = convertLongToMoneyFormat(getTotalOrdersCount());
+
          //TODO 통계데이터 세팅
         String thisMonth = String.format("%d월", LocalDateTime.now().getMonthValue());
         String yesterDay = String.format(LocalDateTime.now().minus(Period.ofDays(1)).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)));
         String thisYear = String.format("%d년", LocalDateTime.now().getYear());
 
         List<TopInfoCard> topInfoCards = new ArrayList<>();
-        topInfoCards.add(new TopInfoCard("이달의 매출(" + thisMonth + ")", "45,000원"));
-        topInfoCards.add(new TopInfoCard("올해의 누적 매출(" + thisYear + ")", "1,145,000원"));
-        topInfoCards.add(new TopInfoCard("어제의 매출(" + yesterDay + ")", "325,000원"));
-        topInfoCards.add(new TopInfoCard("총 누적 주문건 수", "1,232개"));
+        topInfoCards.add(new TopInfoCard("이달의 매출(" + thisMonth + ")", thisMonthTotal + "원"));
+        topInfoCards.add(new TopInfoCard("올해의 누적 매출(" + thisYear + ")", thisYearTotal + "원"));
+        topInfoCards.add(new TopInfoCard("어제의 매출(" + yesterDay + ")", yesterDayTotal + "원"));
+        topInfoCards.add(new TopInfoCard("총 누적 주문건 수", total + "개"));
 
         dashBoard.setTopInfoCards(topInfoCards);
 
@@ -62,4 +71,70 @@ public class DashBoardService {
 
 
      }
+
+     public int insertSales(Sales sales){
+         String sql = "insert into sales(customer_id, order_at, product_id, total_price) values(?, ?, ?, ?)";
+         int result = jdbcTemplate.update(sql, sales.getCustomerId(), sales.getOrderAt(), sales.getProductId(), sales.getTotalPrice());
+         return result;
+     }
+
+     //이달의 매출
+     public Long getAllSalesByMonth(){
+         String sql =  "SELECT sum(total_price) FROM sales total_price " +
+                        "WHERE ( ORDER_AT > LAST_DAY(NOW() - interval 1 month) " +
+                        "AND ORDER_AT <= LAST_DAY(NOW()))";
+         Long result = jdbcTemplate.queryForObject(sql, Long.class);
+         if(result == null) result = 0L;
+         return result;
+     }
+
+     //올해의 누적 매출
+     public Long getAllSalesByYear(){
+        String sql = "select sum(total_price) from sales where year(order_at) = year(now())";
+        Long result = jdbcTemplate.queryForObject(sql, Long.class);
+        if(result == null) result = 0L;
+        return result;
+     }
+
+    //어제의 매출
+    public Long getYesterDaySales(){
+         String sql = "select sum(total_price) from sales where order_at = curdate() - INTERVAL 1 DAY";
+         Long result = jdbcTemplate.queryForObject(sql, Long.class);
+         if(result == null) result = 0L;
+         return result;
+    }
+
+    //총 누적 주문건 수
+    public Long getTotalOrdersCount(){
+         String sql = "select count(*) from sales";
+        Long result = jdbcTemplate.queryForObject(sql, Long.class);
+        if(result == null) result = 0L;
+        return result;
+    }
+    //12345
+
+
+    private static String convertLongToMoneyFormat(Long data){
+         String val = String.valueOf(data);
+         StringBuilder builder = new StringBuilder();
+         int len = val.length();
+         int point = 0;
+         for(int i = 0; i < len; i++){
+             char c = val.charAt(len - (i + 1));
+             builder.append(c);
+             if(point == 2 && i != len - 1){
+                 builder.append(",");
+                 point = 0;
+             }else{
+                 point++;
+             }
+         }
+         String convertedVal = builder.reverse().toString();
+         return convertedVal;
+    }
+
+
+
+
+
 }

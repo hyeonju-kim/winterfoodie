@@ -46,7 +46,6 @@ public class Store implements Serializable {
     public void changeStoreDetail(StoreDetail storeDetail){
         this.storeDetail = storeDetail;
     }
-
     public void changeStatus(StoreRequestDto storeRequestDto){
         this.status = storeRequestDto.getStatus();
     }

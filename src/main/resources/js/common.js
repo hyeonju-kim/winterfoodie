@@ -18,3 +18,15 @@ smbCom.isEmpty = function(str){
     return (str == '' || str == undefined || str == null || str == 'null' );
 }
 
+smbCom.readURL = function(input){
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('preview').src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        document.getElementById('preview').src = "";
+    }
+}
+
