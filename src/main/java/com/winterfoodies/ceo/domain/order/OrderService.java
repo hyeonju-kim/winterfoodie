@@ -40,7 +40,7 @@ public class OrderService {
         for(Order order : orders){
             User customer = order.getUser();
             OrderResponseDto orderResponseDto = new OrderResponseDto();
-            List<OrderProduct> orderProducts = order.getOrderProducts();
+//            List<OrderProduct> orderProducts = order.getOrderProducts();
             orderResponseDto.setOrderId(order.getId());
             orderResponseDto.setCustomerId(customer.getId());
             orderResponseDto.setCustomerName(customer.getName());
@@ -48,15 +48,15 @@ public class OrderService {
             StringBuilder messageBuilder = new StringBuilder();
             Long totalPrice = 0L;
             Long totalQuantity = 0L;
-            for(OrderProduct orderProduct : orderProducts){
-               Product nowProduct = orderProduct.getProduct();
-               String productName = nowProduct.getName();
-               Long productPrice = nowProduct.getPrice();
-               totalPrice += productPrice * orderProduct.getQuantity();
-               totalQuantity += orderProduct.getQuantity();
-               orderMenuBuilder.append(" " + productName + "/" + orderProduct.getQuantity());
-                messageBuilder.append(" " + productName + ":" + orderProduct.getClientMessage());
-            }
+//            for(OrderProduct orderProduct : orderProducts){
+//               Product nowProduct = orderProduct.getProduct();
+//               String productName = nowProduct.getName();
+//               Long productPrice = nowProduct.getPrice();
+//               totalPrice += productPrice * orderProduct.getQuantity();
+//               totalQuantity += orderProduct.getQuantity();
+//               orderMenuBuilder.append(" " + productName + "/" + orderProduct.getQuantity());
+//                messageBuilder.append(" " + productName + ":" + orderProduct.getClientMessage());
+//            }
 
             orderMenuBuilder.append(" 총 금액 : " + totalPrice);
             orderMenuBuilder.append(" 총 수량 : " + totalQuantity);

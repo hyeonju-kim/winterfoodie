@@ -2,18 +2,12 @@ package com.winterfoodies.ceo.domain.files.service;
 
 
 import com.winterfoodies.ceo.config.properties.ResourceProperties;
-import com.winterfoodies.ceo.entities.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,7 +17,6 @@ import java.nio.file.StandardCopyOption;
 @RequiredArgsConstructor
 @Slf4j
 public class FileStorageService {
-
     private final ResourceProperties resourceProperties;
 
     public void store(MultipartFile file, String fileName) throws Exception{

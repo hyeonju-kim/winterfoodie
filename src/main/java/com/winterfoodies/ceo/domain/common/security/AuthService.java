@@ -20,7 +20,6 @@ import java.util.Random;
 public class AuthService {
     private final ApplicationEventPublisher eventPublisher;
     private final PasswordEncoder passwordEncoder;
-
     private final UserRepository userRepository;
 
     private String instancePasswordGenerator(){
@@ -30,7 +29,6 @@ public class AuthService {
             int no = random.nextInt(10);
             k = k * 10 + no;
         }
-
         return String.valueOf(k);
     }
 
@@ -52,6 +50,4 @@ public class AuthService {
         eventPublisher.publishEvent(tempAuthInfo);
         return true;
     }
-
-
 }

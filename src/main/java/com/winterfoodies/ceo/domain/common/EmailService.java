@@ -28,5 +28,4 @@ public class EmailService{
         message.setText("임시비밀번호 : " + tempAuthInfo.getTempPassword());
         javaMailSender.send(message);
     }
-
 }

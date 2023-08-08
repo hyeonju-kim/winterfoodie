@@ -10,5 +10,4 @@ public class ExceptionUtils {
     public static boolean isForView(HttpServletRequest request){
         return request.getMethod().toString().equals(HttpMethod.GET.toString());
     }
-
 }

@@ -1,12 +1,8 @@
 package com.winterfoodies.ceo.domain.customer;
 
 import com.winterfoodies.ceo.domain.dashboard.service.DashBoardService;
-import com.winterfoodies.ceo.domain.order.OrderService;
 import com.winterfoodies.ceo.dto.order.OrderRequestDto;
-import com.winterfoodies.ceo.entities.Order;
 import com.winterfoodies.ceo.entities.OrderRepository;
-import com.winterfoodies.ceo.entities.Sales;
-import com.winterfoodies.ceo.entities.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,9 +18,7 @@ import java.util.Map;
 public class CustomerController {
 
     private final CustomerService customerService;
-
     private final OrderRepository orderRepository;
-
     private final DashBoardService dashBoardService;
 
     @PostMapping("")

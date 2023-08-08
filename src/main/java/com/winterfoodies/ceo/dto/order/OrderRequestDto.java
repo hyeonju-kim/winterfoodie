@@ -16,5 +16,4 @@ public class OrderRequestDto {
     private Long orderId;
     private List<ProductRequestDto> productRequestDtoList;
     private Long storeId;
-
 }

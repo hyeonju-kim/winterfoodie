@@ -1,13 +1,11 @@
 package com.winterfoodies.ceo.domain.user.controller;
 
 import com.winterfoodies.ceo.config.properties.UiControlProperties;
-import com.winterfoodies.ceo.domain.common.EmailService;
 import com.winterfoodies.ceo.domain.common.security.AuthService;
 import com.winterfoodies.ceo.domain.user.service.UserService;
 import com.winterfoodies.ceo.domain.user.service.security.UserDetailsImpl;
 import com.winterfoodies.ceo.dto.user.UserRequestDto;
 import com.winterfoodies.ceo.dto.user.UserResponseDto;
-import com.winterfoodies.ceo.entities.User;
 import com.winterfoodies.ceo.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +15,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,13 +81,10 @@ public class UserController {
         return ResponseEntity.ok(UserResponseDto.empty());
     }
 
-
     @ExceptionHandler(UserException.class)
     public ResponseEntity<UserResponseDto> userExceptionHandler(UserException userException){
         UserResponseDto userResponseDto =
                 UserResponseDto.builder().message(userException.getMessage()).build();
         return ResponseEntity.status(userException.getStatus()).body(userResponseDto);
     }
-
-
 }

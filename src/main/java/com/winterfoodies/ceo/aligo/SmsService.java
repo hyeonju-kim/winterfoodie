@@ -24,7 +24,6 @@ public class SmsService{
     @Value("${aligo.sender}")
     private String sender;
 
-
     @Async("threadPoolTaskExecutor")
     @EventListener(SmsEvent.class)
     public void sendSms(SmsEvent smsEvent){

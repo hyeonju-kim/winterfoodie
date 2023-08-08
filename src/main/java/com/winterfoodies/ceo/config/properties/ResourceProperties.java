@@ -14,6 +14,5 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "resource")
 public class ResourceProperties {
     private final String rootUrl;
-
     private final String imgPath;
 }

@@ -94,7 +94,7 @@ public class CustomerService {
         Store store = foundOrder.getStore();
         String storeName = store.getStoreDetail().getName();
         foundOrder.setProcessYn("Y");
-        List<OrderProduct> orderProducts = foundOrder.getOrderProducts();
+//        List<OrderProduct> orderProducts = foundOrder.getOrderProducts();
         //고객정보
         User foundUser = foundOrder.getUser();
         //1. 해당 주문 정산
@@ -102,11 +102,11 @@ public class CustomerService {
         sales.setOrderAt(LocalDateTime.now());
         sales.setCustomerId(foundUser.getId());
         Long totalPrice = 0L;
-        for(OrderProduct orderProduct : orderProducts){
-            long quantity  = orderProduct.getQuantity();
-            long money = quantity * orderProduct.getProduct().getPrice();
-            totalPrice += money;
-        }
+//        for(OrderProduct orderProduct : orderProducts){
+//            long quantity  = orderProduct.getQuantity();
+//            long money = quantity * orderProduct.getProduct().getPrice();
+//            totalPrice += money;
+//        }
 
         sales.setTotalPrice(totalPrice);
         int result = dashBoardService.insertSales(sales);

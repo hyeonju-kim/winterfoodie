@@ -46,6 +46,15 @@ public class StoreDetail {
     @Column(name = "STORE_CLOSE_TIME")
     private LocalDateTime closeTime;
 
+    @Column(name = "AVERAGE_RATING")
+    private Long averageRating;
+
+    @Column(name = "LATITUDE")
+    private double latitude;
+
+    @Column(name = "LONGITUDE")
+    private double longitude;
+
     @Lob
     @Column(name = "STORE_INFO")
     private String info;

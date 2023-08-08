@@ -30,6 +30,7 @@ public class User implements Serializable {
 
     @Column(name = "USER_NAME")
     private String name;
+
     @Column(name = "USER_PASSWORD")
     private String password;
 
@@ -46,6 +47,12 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "USER_STATUS")
     private UserStatus status;
+
+    @Column(name = "LATITUDE")
+    private double latitude;
+
+    @Column(name = "LONGITUDE")
+    private double longitude;
 
     @OneToOne
     @JoinColumn(name = "STORE_ID")

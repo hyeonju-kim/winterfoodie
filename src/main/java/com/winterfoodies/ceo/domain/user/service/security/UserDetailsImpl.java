@@ -22,7 +22,6 @@ import java.util.Objects;
 
 @Getter
 public class UserDetailsImpl implements UserDetails {
-
     public UserDetailsImpl(User user, String redirect){
         this.user = user;
         this.redirect = redirect;

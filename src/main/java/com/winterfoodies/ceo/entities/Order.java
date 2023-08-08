@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -15,7 +16,6 @@ import java.util.List;
 @Getter
 @Setter
 public class Order{
-
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orderSeq")
     @Column(name = "ORDER_ID")
     private Long id;
@@ -34,7 +34,20 @@ public class Order{
     @Column(name = "CREATED_AT")
     private LocalDateTime createAt;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
+    @Column(name = "TOTAL_AMOUNT")
+    private Long totalAmount;
+
+    @Column(name = "MESSAGE")
+    private String message;
+
+    @OneToMany(mappedBy = "order")
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
+    public Collection<OrderProduct> getOrderProducts() {
+        return orderProducts;
+    }
+
+//    public void setOrderProducts(Collection<OrderProduct> orderProducts) {
+//        this.orderProducts = orderProducts;
+//    }
 }

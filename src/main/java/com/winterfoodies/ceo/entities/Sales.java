@@ -16,13 +16,8 @@ public class Sales {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SALES_ID")
     private Long id;
-
     private Long customerId;
-
     private Long totalPrice;
-
     private Long productId;
-
     private LocalDateTime orderAt;
-
 }

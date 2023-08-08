@@ -30,5 +30,4 @@ public class Product {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
     List<StoreProduct> storeProducts = new ArrayList<>();
-
 }

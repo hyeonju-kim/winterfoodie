@@ -13,8 +13,6 @@ public class OrderResponseDto {
     private String customerName;
     private String orderDate;
     private String processYn;
-
     private String customerMessage;
     private String orderMenu;
-
 }
