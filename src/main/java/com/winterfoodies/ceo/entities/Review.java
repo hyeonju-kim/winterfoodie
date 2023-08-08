@@ -1,7 +1,7 @@
 package com.winterfoodies.ceo.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.winterfoodies.winterfoodies_project.dto.review.ReviewDto;
+import com.winterfoodies.ceo.dto.review.ReviewDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,7 +36,5 @@ public class Review extends Timestamped{
     }
 
     public Review() {
-
     }
-
 }
